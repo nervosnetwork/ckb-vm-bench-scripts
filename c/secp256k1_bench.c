@@ -1,15 +1,44 @@
 #include <stdlib.h>
+#include <string.h>
 #include "sha3.h"
 
 #define SHA3_BLOCK_SIZE 32
 
-#include <secp256k1_static.h>
 /*
  * We are including secp256k1 implementation directly so gcc can strip
  * unused functions. For some unknown reasons, if we link in libsecp256k1.a
  * directly, the final binary will include all functions rather than those used.
  */
+#define HAVE_CONFIG_H 1
+#define USE_EXTERNAL_DEFAULT_CALLBACKS
 #include <secp256k1.c>
+
+void secp256k1_default_illegal_callback_fn(const char* str, void* data) {
+  (void) str;
+  (void) data;
+  abort();
+}
+
+void secp256k1_default_error_callback_fn(const char* str, void* data) {
+  (void) str;
+  (void) data;
+  abort();
+}
+
+int secp256k1_custom_verify_only_initialize(secp256k1_context *context,
+                                            secp256k1_ge_storage (*pre_g)[],
+                                            secp256k1_ge_storage (*pre_g_128)[]) {
+  context->illegal_callback = default_illegal_callback;
+  context->error_callback = default_error_callback;
+
+  secp256k1_ecmult_context_init(&context->ecmult_ctx);
+  secp256k1_ecmult_gen_context_init(&context->ecmult_gen_ctx);
+
+  context->ecmult_ctx.pre_g = pre_g;
+  context->ecmult_ctx.pre_g_128 = pre_g_128;
+
+  return 1;
+}
 
 int char_to_int(char ch)
 {
@@ -75,7 +104,10 @@ int main(int argc, char* argv[])
   }
 
   secp256k1_context context;
-  int ret = secp256k1_context_initialize(&context, SECP256K1_CONTEXT_VERIFY);
+  int ret = secp256k1_custom_verify_only_initialize(
+      &context,
+      (secp256k1_ge_storage (*)[]) &secp256k1_ecmult_static_pre_context,
+      (secp256k1_ge_storage (*)[]) &secp256k1_ecmult_static_pre128_context);
   if (ret == 0) {
     return 4;
   }
