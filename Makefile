@@ -1,6 +1,6 @@
 CC := riscv64-unknown-elf-gcc
 DUMP := riscv64-unknown-elf-objdump
-CFLAGS := -Ideps/secp256k1/src -Ideps/secp256k1 -O3
+CFLAGS := -Ideps/secp256k1/src -Ideps/secp256k1 -O3 -I ../ckb-c-stdlib
 LDFLAGS := -Wl,-static -fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,-s
 SECP256K1_LIB := deps/secp256k1/src/ecmult_static_pre_context.h
 SECP256K1_BENCH_BIN := build/secp256k1_bench

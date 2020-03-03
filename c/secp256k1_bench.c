@@ -2,6 +2,8 @@
 #include <string.h>
 #include "sha3.h"
 
+#include "ckb_syscalls.h"
+
 #define SHA3_BLOCK_SIZE 32
 
 /*
@@ -74,33 +76,43 @@ int hex_to_bin(char* buf, size_t buf_len, const char* hex)
 
 #define CHECK_LEN(x) if ((x) <= 0) { return x; }
 
-/*
- * Arguments are listed in the following order:
- * 0. Program name, ignored here, only preserved for compatibility reason
- * 1. Pubkey in hex format, a maximum of 130 bytes will be processed
- * 2. Signature in hex format, a maximum of 512 bytes will be processed
- * 3. Current script hash in hex format, which is 128 bytes. While this program
- * cannot verify the hash directly, this ensures the script is include in
- * signature calculation
- * 4. Other additional parameters that might be included. Notice only ASCII
- * characters are included, so binary should be passed as binary format.
- *
- * This program will run double sha256 on all arguments excluding pubkey and
- * signature(also for simplicity, we are running sha256 on ASCII chars directly,
- * not deserialized raw bytes), then it will use sha256 result calculated as the
- * message to verify the signature. It returns 0 if the signature works, and
- * a non-zero value otherwise.
- *
- * Note all hex values passed in as arguments must have lower case letters for
- * deterministic behavior.
- */
-int main(int argc, char* argv[])
+int run(int i);
+
+int main() {
+  uint32_t value;
+  uint64_t len = 4;
+  int ret = ckb_load_witness((void*) &value, &len, 0, 0,
+                             CKB_SOURCE_GROUP_INPUT);
+  if (ret != CKB_SUCCESS) {
+    return ret;
+  }
+  if (len < 4) {
+    return -1;
+  }
+
+  uint32_t times = value >> 8;
+  value = value & 0xFF;
+  uint8_t result = 0;
+
+  for (int i = 0; i < times; i++) {
+    result += run(value);
+  }
+
+  return result;
+}
+
+int run(int i)
 {
   char buf[256];
   int len;
 
-  if (argc < 4) {
-    return -1;
+  const char* pubkey_hex = "033f8cf9c4d51a33206a6c1c6b27d2cc5129daa19dbd1fc148d395284f6b26411f";
+  const char* signature_hex = "304402203679d909f43f073c7c1dcf8468a485090589079ee834e6eed92fea9b09b06a2402201e46f1075afa18f306715e7db87493e7b7e779569aa13c64ab3d09980b3560a3";
+  char* message;
+  if (i == 1) {
+    message = "foobar";
+  } else {
+    message = "foobarinvalid";
   }
 
   secp256k1_context context;
@@ -112,7 +124,7 @@ int main(int argc, char* argv[])
     return 4;
   }
 
-  len = hex_to_bin(buf, 65, argv[1]);
+  len = hex_to_bin(buf, 65, pubkey_hex);
   CHECK_LEN(len);
   secp256k1_pubkey pubkey;
 
@@ -121,7 +133,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  len = hex_to_bin(buf, 256, argv[2]);
+  len = hex_to_bin(buf, 256, signature_hex);
   CHECK_LEN(len);
   secp256k1_ecdsa_signature signature;
   secp256k1_ecdsa_signature_parse_der(&context, &signature, buf, len);
@@ -132,9 +144,7 @@ int main(int argc, char* argv[])
   sha3_ctx_t sha3_ctx;
   unsigned char hash[SHA3_BLOCK_SIZE];
   sha3_init(&sha3_ctx, SHA3_BLOCK_SIZE);
-  for (int i = 3; i < argc; i++) {
-    sha3_update(&sha3_ctx, argv[i], strlen(argv[i]));
-  }
+  sha3_update(&sha3_ctx, message, strlen(message));
   sha3_final(hash, &sha3_ctx);
 
   sha3_init(&sha3_ctx, SHA3_BLOCK_SIZE);
@@ -145,7 +155,7 @@ int main(int argc, char* argv[])
   if (ret == 1) {
     ret = 0;
   } else {
-    ret = 2;
+    ret = 1;
   }
 
   return ret;
