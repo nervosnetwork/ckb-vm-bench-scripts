@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
   len = hex_to_bin(buf, 256, argv[2]);
   CHECK_LEN(len);
   secp256k1_ecdsa_signature signature;
-  secp256k1_ecdsa_signature_parse_der(&context, &signature, buf, len);
+  ret = secp256k1_ecdsa_signature_parse_der(&context, &signature, buf, len);
   if (ret == 0) {
     return 3;
   }
