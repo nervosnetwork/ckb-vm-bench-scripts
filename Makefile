@@ -25,5 +25,7 @@ $(SECP256K1_LIB):
 clean:
 	cd deps/secp256k1 && make clean
 	rm -rf $(SECP256K1_BENCH_BIN)
+	rm -rf build/schnorr_bench
+	rm -rf build/*.txt
 
 .PHONY: all clean
