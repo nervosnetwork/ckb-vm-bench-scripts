@@ -1,11 +1,11 @@
 [package]
-name = "k256"
+name = "k256_schnorr"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 ckb-std = "0.17.0"
-k256 = { version = "=0.13.1", default-features = false, features = ["arithmetic", "ecdsa", "alloc"] }
+k256 = { version = "=0.13.1", default-features = false, features = ["arithmetic", "schnorr", "alloc"] }
 
 [dev-dependencies]
 ckb-testtool = "0.15.0"
