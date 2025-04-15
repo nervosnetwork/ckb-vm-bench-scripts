@@ -36,16 +36,12 @@ pub fn program_entry() -> i8 {
         0xad, 0xf5, 0xaa, 0xa1, 0x0b, 0x8c, 0x61, 0xe6, 0x36, 0x06, 0x2a, 0xaa, 0xd1, 0x1c, 0x2a,
         0x26, 0x08, 0x34, 0x06,
     ];
-
     let verifying_key = VerifyingKey::from_bytes(&pub_bytes).unwrap();
     let sig = Signature::try_from(&sig_bytes[..]).unwrap();
-
     let mut prehash_for_verifying = Sha512::default();
     prehash_for_verifying.update(&msg_bytes[..]);
-
     assert!(verifying_key
         .verify_prehashed(prehash_for_verifying.clone(), None, &sig)
         .is_ok());
-
     0
 }

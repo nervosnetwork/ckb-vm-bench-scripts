@@ -39,11 +39,9 @@ pub fn program_entry() -> i8 {
         0xff, 0x47, 0xad, 0x42,
     ];
     let rec_id = RecoveryId::try_from(1u8).unwrap();
-
     let sig = Signature::from_slice(&sig_bytes).unwrap();
     let pubkey_expect = VerifyingKey::from_sec1_bytes(&pub_bytes).unwrap();
     let recovered_key = VerifyingKey::recover_from_msg(&msg_bytes, &sig, rec_id).unwrap();
     assert_eq!(recovered_key, pubkey_expect);
-
     0
 }

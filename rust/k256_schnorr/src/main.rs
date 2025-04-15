@@ -38,10 +38,8 @@ pub fn program_entry() -> i8 {
         0x44, 0x29, 0x55, 0x04, 0x89, 0x4d, 0xe1, 0x46, 0xc1, 0x92, 0x87, 0xb9, 0x17, 0xc7, 0x50,
         0x65, 0x06, 0xff, 0xc9,
     ];
-
     let verifying_key = VerifyingKey::from_bytes(&pub_bytes).unwrap();
     let sig = Signature::try_from(sig_bytes.as_slice()).unwrap();
     verifying_key.verify(&msg_bytes, &sig).unwrap();
-
     0
 }
