@@ -49,4 +49,3 @@ if ! [ -f build/main ]; then
 fi
 
 ls -hl build/main
-ckb-debugger --bin build/main
