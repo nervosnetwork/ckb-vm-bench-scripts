@@ -19,7 +19,7 @@ fi
 
 if ! [ -d musl ]; then
     git clone https://github.com/xxuejie/musl
-	cd musl
+    cd musl
     git checkout 01ff4b5
     ./ckb/build.sh
     cd ..
@@ -30,7 +30,7 @@ CFLAGS_SECP256K1+=" -isystem musl/release/include"
 CFLAGS_SECP256K1+=" -DECMULT_WINDOW_SIZE=6 -DENABLE_MODULE_RECOVERY -DENABLE_MODULE_SCHNORRSIG -DENABLE_MODULE_EXTRAKEYS"
 if ! [ -d secp256k1 ]; then
     git clone https://github.com/bitcoin-core/secp256k1
-	cd secp256k1
+    cd secp256k1
     git checkout 0cdc758
     cd ..
     $CC $CFLAGS_SECP256K1 -c -o build/secp256k1/precomputed_ecmult.o secp256k1/src/precomputed_ecmult.c

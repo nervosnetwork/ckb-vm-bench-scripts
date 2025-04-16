@@ -19,7 +19,7 @@ fi
 
 if ! [ -d musl ]; then
     git clone https://github.com/xxuejie/musl
-	cd musl
+    cd musl
     git checkout 01ff4b5
     ./ckb/build.sh
     cd ..
@@ -27,7 +27,7 @@ fi
 
 if ! [ -d secp256k1 ]; then
     git clone https://github.com/bitcoin-core/secp256k1
-	cd secp256k1
+    cd secp256k1
     git checkout 0cdc758
     cd ..
     CFLAGS_SECP256K1="${CFLAGS_BASE}"
