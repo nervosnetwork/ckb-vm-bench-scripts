@@ -25,7 +25,7 @@ BUILD_DIR := build/$(MODE)
 # likely match the crate name, which is also the name of the final binary.
 # However if this is not the case, you can tweak this variable. As the name hints,
 # more than one binary is supported here.
-BINARIES := k256
+BINARIES := k256_ecdsa
 
 ifeq (release,$(MODE))
 	MODE_ARGS := --release
@@ -62,7 +62,7 @@ fmt:
 # Arbitrary cargo command is supported here. For example:
 #
 # make cargo CARGO_CMD=expand CARGO_ARGS="--ugly"
-# 
+#
 # Invokes:
 # cargo expand --ugly
 CARGO_CMD :=

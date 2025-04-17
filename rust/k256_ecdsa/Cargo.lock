@@ -1154,16 +1154,6 @@ dependencies = [
 
 [[package]]
 name = "k256"
-version = "0.1.0"
-dependencies = [
- "ckb-std",
- "ckb-testtool",
- "k256 0.13.1",
- "serde_json",
-]
-
-[[package]]
-name = "k256"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cadb76004ed8e97623117f3df85b17aaa6626ab0b0831e6573f104df16cd1bcc"
@@ -1172,6 +1162,16 @@ dependencies = [
  "ecdsa",
  "elliptic-curve",
  "sha2",
+]
+
+[[package]]
+name = "k256_ecdsa"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
+ "ckb-testtool",
+ "k256",
+ "serde_json",
 ]
 
 [[package]]

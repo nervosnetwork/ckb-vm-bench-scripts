@@ -1,0 +1,36 @@
+name: Develop
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup
+      run: |
+        clang --version
+        sudo ln -s $(which llvm-ar-18) /usr/bin/llvm-ar || true
+        sudo ln -s $(which llvm-objcopy-18) /usr/bin/llvm-objcopy || true
+        rustup target add riscv64imac-unknown-none-elf
+    - name: Build
+      run: |
+        cd ${{ github.workspace }}/c/secp256k1_ecdsa && bash main.sh
+        cd ${{ github.workspace }}/c/secp256k1_schnorr && bash main.sh
+        cd ${{ github.workspace }}/rust/ed25519 && make
+        cd ${{ github.workspace }}/rust/k256_ecdsa && make
+        cd ${{ github.workspace }}/rust/k256_schnorr && make
+        cd ${{ github.workspace }}/rust/p256 && make
+        cd ${{ github.workspace }}/rust/rsa && make
+    - name: Bench
+      run: |
+        cargo install ckb-debugger
+        bash script/release.sh
+    - name: Store
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          binary.tar.gz
+          report.txt
