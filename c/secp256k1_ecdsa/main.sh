@@ -2,7 +2,7 @@ set -ex
 
 CC="${CC:-clang}"
 OBJCOPY="${OBJCOPY:-llvm-objcopy}"
-CFLAGS_BASE="--target=riscv64 -march=rv64imc_zba_zbb_zbc_zbs -g -Oz -fdata-sections -ffunction-sections"
+CFLAGS_BASE="--target=riscv64 -march=rv64imc_zba_zbb_zbc_zbs -O2 -fdata-sections -ffunction-sections"
 
 if ! [ -d build ]; then
     mkdir build
@@ -44,6 +44,7 @@ if ! [ -f build/main ]; then
     CFLAGS_MAIN+=" -Isecp256k1/include -Isecp256k1/src"
     CFLAGS_MAIN+=" -Lmusl/release/lib -Lcompiler-rt-builtins-riscv/build"
     CFLAGS_MAIN+=" -lc -lgcc -lcompiler-rt"
+    CFLAGS_MAIN+=" -Wl,--gc-sections"
     $CC $CFLAGS_MAIN -o build/main main.c build/secp256k1/*
     $OBJCOPY --strip-debug --strip-all build/main
 fi
