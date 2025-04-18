@@ -17,6 +17,7 @@ report() {
     echo "" >> report.txt
 }
 
+echo > report.txt
 report secp256k1_ecdsa
 report secp256k1_schnorr
 report ed25519

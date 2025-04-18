@@ -19,8 +19,8 @@ jobs:
         rustup target add riscv64imac-unknown-none-elf
     - name: Build
       run: |
-        cd ${{ github.workspace }}/c/secp256k1_ecdsa && bash main.sh
-        cd ${{ github.workspace }}/c/secp256k1_schnorr && bash main.sh
+        cd ${{ github.workspace }}/c/secp256k1_ecdsa && make
+        cd ${{ github.workspace }}/c/secp256k1_schnorr && make
         cd ${{ github.workspace }}/rust/ed25519 && make
         cd ${{ github.workspace }}/rust/k256_ecdsa && make
         cd ${{ github.workspace }}/rust/k256_schnorr && make
