@@ -1,0 +1,4 @@
+/build
+/compiler-rt-builtins-riscv
+/musl
+/secp256k1
