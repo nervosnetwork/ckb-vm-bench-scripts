@@ -23,7 +23,7 @@ jobs:
     - name: Bench
       run: |
         cargo install ckb-debugger
-        tar zcvf binary.tar.gz binary
+        tar zcvf binary.tar.gz build
         make report >> report.txt
     - name: Store
       uses: softprops/action-gh-release@v2
