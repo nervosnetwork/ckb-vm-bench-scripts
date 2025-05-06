@@ -85,10 +85,9 @@ check:
 clippy:
 	cargo clippy $(CARGO_ARGS)
 
-NON_RUST_CONTRACTS := contracts/secp256k1_ecdsa contracts/secp256k1_schnorr
 fmt:
 	cargo fmt $(CARGO_ARGS)
-	$(foreach dir, $(NON_RUST_CONTRACTS), $(MAKE) -e -C $(dir) fmt;)
+	$(foreach dir, $(wildcard contracts/*), $(MAKE) -e -C $(dir) fmt;)
 
 # Arbitrary cargo command is supported here. For example:
 #
@@ -103,7 +102,7 @@ cargo:
 clean:
 	rm -rf build
 	cargo clean
-	$(foreach dir, $(NON_RUST_CONTRACTS), $(MAKE) -e -C $(dir) clean;)
+	$(foreach dir, $(wildcard contracts/*), $(MAKE) -e -C $(dir) clean;)
 
 TEMPLATE_TYPE := --git
 TEMPLATE_REPO := https://github.com/cryptape/ckb-script-templates
