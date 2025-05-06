@@ -1,0 +1,10 @@
+[package]
+name = "rsa"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ckb-std = "0.17.0"
+num-traits = { version= "0.2.9", default-features = false, features = ["libm"] }
+rsa = { version = "0.9.2", default-features = false, features = ["u64_digit", "sha2"]}
+signature = { version = "2.0.0", default-features = false , features = ["alloc", "digest", "rand_core"] }
