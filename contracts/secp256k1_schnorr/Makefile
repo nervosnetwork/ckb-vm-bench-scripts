@@ -21,6 +21,7 @@ CLANG := $(shell $(TOP)/scripts/find_clang)
 CLANG_OPTIMIZER := -O2
 AR := $(subst clang,llvm-ar,$(CLANG))
 OBJCOPY := $(subst clang,llvm-objcopy,$(CLANG))
+CLANG_FORMAT := $(subst clang,clang-format,$(CLANG))
 # When this is set to some value, the generated binaries will be copied over
 BUILD_DIR :=
 # Generated binaries to copy. By convention, a Rust crate's directory name will
@@ -85,8 +86,9 @@ check:
 clippy:
 	cargo clippy $(CARGO_ARGS)
 
+STYLE := "{BasedOnStyle: Google, TabWidth: 4, IndentWidth: 4, UseTab: Never, SortIncludes: false, ColumnLimit: 120}"
 fmt:
-	cargo fmt $(CARGO_ARGS)
+	$(CLANG_FORMAT) -i -style=$(STYLE) *.c
 
 # Arbitrary cargo command is supported here. For example:
 #
@@ -99,7 +101,7 @@ cargo:
 	cargo $(CARGO_CMD) $(CARGO_ARGS)
 
 clean:
-	cargo clean
+	rm -f $(BINARIES)
 
 prepare:
 	rustup target add riscv64imac-unknown-none-elf
