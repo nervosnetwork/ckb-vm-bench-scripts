@@ -1,9 +1,0 @@
-[submodule "deps/compiler-rt-builtins-riscv"]
-	path = deps/compiler-rt-builtins-riscv
-	url = https://github.com/nervosnetwork/compiler-rt-builtins-riscv
-[submodule "deps/musl"]
-	path = deps/musl
-	url = https://github.com/xxuejie/musl
-[submodule "deps/secp256k1"]
-	path = deps/secp256k1
-	url = https://github.com/bitcoin-core/secp256k1
